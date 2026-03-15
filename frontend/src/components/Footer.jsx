@@ -36,7 +36,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>Free Classifieds in Pakistan. © 2024 OLX Clone — MERN Stack</p>
+        <p>Free Classifieds in Pakistan. © 2024 OLX </p>
       </div>
     </footer>
   );
