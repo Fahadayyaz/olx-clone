@@ -1,114 +1,79 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import API from "../api/axios";
-import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
+import ChatWindow from "../components/ChatWindow";
+import { format } from "timeago.js";
 
-export default function Profile() {
-  const { user, setUser, login } = useAuth();
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    city: "",
-    province: "",
-  });
-  const [loading, setLoading] = useState(false);
+export default function ChatPage() {
+  const { user } = useAuth();
+  const location = useLocation();
+  const [chats, setChats] = useState([]);
+  const [activeChat, setActiveChat] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      setForm({
-        name: user.name || "",
-        phone: user.phone || "",
-        city: user.location?.city || "",
-        province: user.location?.province || "",
-      });
-    }
-  }, [user]);
+    API.get("/chats")
+      .then((res) => {
+        setChats(res.data);
+        // Auto-select from navigation state
+        if (location.state?.activeChatId) {
+          const found = res.data.find(
+            (c) => c._id === location.state.activeChatId,
+          );
+          if (found) setActiveChat(found);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [location.state]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await API.put("/auth/profile", form);
-      login({ ...res.data, token: user.token });
-      toast.success("Profile updated!");
-    } catch (err) {
-      toast.error("Failed to update");
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (loading) return <div className="spinner" />;
 
   return (
-    <div className="container profile-page">
-      <div className="profile-card">
-        <div className="profile-avatar-section">
-          <img
-            src={
-              user?.avatar ||
-              `https://ui-avatars.com/api/?name=${user?.name}&background=23e5db&color=002f34&size=80`
-            }
-            alt=""
-          />
-          <div>
-            <h2>{user?.name}</h2>
-            <p style={{ color: "#7f9799", fontSize: 14 }}>{user?.email}</p>
-            <p style={{ color: "#7f9799", fontSize: 12 }}>
-              Member since{" "}
-              {new Date(
-                user?.memberSince || user?.createdAt,
-              ).toLocaleDateString("en-PK", {
-                month: "short",
-                year: "numeric",
-              })}
-            </p>
+    <div className="chat-page">
+      <div className="chat-list">
+        <div className="chat-list-header">Chats</div>
+        {chats.length === 0 ? (
+          <div style={{ padding: 24, color: "#7f9799", textAlign: "center" }}>
+            No chats yet
           </div>
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Full Name</label>
-            <input
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Phone</label>
-            <input
-              value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              placeholder="03XX-XXXXXXX"
-            />
-          </div>
-          <div className="form-group">
-            <label>City</label>
-            <input
-              value={form.city}
-              onChange={(e) => setForm({ ...form, city: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Province</label>
-            <select
-              value={form.province}
-              onChange={(e) => setForm({ ...form, province: e.target.value })}
-            >
-              <option value="">Select</option>
-              <option value="Punjab">Punjab</option>
-              <option value="Sindh">Sindh</option>
-              <option value="KPK">Khyber Pakhtunkhwa</option>
-              <option value="Balochistan">Balochistan</option>
-              <option value="Islamabad">Islamabad Capital</option>
-              <option value="AJK">Azad Kashmir</option>
-              <option value="GB">Gilgit-Baltistan</option>
-            </select>
-          </div>
-          <button className="btn btn-primary" disabled={loading}>
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
-        </form>
+        ) : (
+          chats.map((chat) => {
+            const other = chat.participants?.find((p) => p._id !== user._id);
+            return (
+              <div
+                key={chat._id}
+                className={`chat-item ${activeChat?._id === chat._id ? "active" : ""}`}
+                onClick={() => setActiveChat(chat)}
+              >
+                <img
+                  src={
+                    other?.avatar ||
+                    `https://ui-avatars.com/api/?name=${other?.name}&background=23e5db&color=002f34`
+                  }
+                  alt=""
+                />
+                <div className="chat-item-info">
+                  <div className="chat-item-name">{other?.name}</div>
+                  <div style={{ fontSize: 12, color: "#7f9799" }}>
+                    {chat.ad?.title}
+                  </div>
+                  <div className="chat-item-last">
+                    {chat.lastMessage?.text || "No messages yet"}
+                    {chat.lastMessage?.createdAt && (
+                      <span style={{ float: "right", fontSize: 11 }}>
+                        {format(chat.lastMessage.createdAt)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
+
+      <ChatWindow chat={activeChat} />
     </div>
   );
 }
