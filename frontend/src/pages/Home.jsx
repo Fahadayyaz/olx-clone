@@ -32,7 +32,7 @@ export default function Home() {
     setAds((prev) =>
       prev.map((ad) => {
         if (ad._id === adId) {
-          const user = JSON.parse(localStorage.getItem("olx_user"));
+          const user = JSON.parse(localStorage.getItem("zill_user"));
           const isFav = ad.favorites?.includes(user?._id);
           return {
             ...ad,

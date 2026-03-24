@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem("olx_user");
+    const stored = localStorage.getItem("zill_user");
     if (stored) {
       const parsed = JSON.parse(stored);
       setUser(parsed);
@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
           setUser({ ...res.data, token: parsed.token });
         })
         .catch(() => {
-          localStorage.removeItem("olx_user");
+          localStorage.removeItem("zill_user");
           setUser(null);
         })
         .finally(() => setLoading(false));
@@ -30,12 +30,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (userData) => {
-    localStorage.setItem("olx_user", JSON.stringify(userData));
+    localStorage.setItem("zill_user", JSON.stringify(userData));
     setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem("olx_user");
+    localStorage.removeItem("zill_user");
     setUser(null);
   };
 

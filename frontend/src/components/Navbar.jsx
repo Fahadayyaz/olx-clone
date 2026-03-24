@@ -31,7 +31,7 @@ export default function Navbar() {
       <nav className="navbar">
         <div className="navbar-top">
           <Link to="/" className="navbar-logo">
-            OLX<span>.</span>
+            zill<span>.</span>
           </Link>
 
           <button

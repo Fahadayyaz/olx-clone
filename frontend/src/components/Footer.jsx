@@ -22,13 +22,13 @@ export default function Footer() {
         </div>
         <div className="footer-col">
           <h4>About Us</h4>
-          <a href="#">About OLX Group</a>
+          <a href="#">About zill Group</a>
           <a href="#">Careers</a>
           <a href="#">Contact Us</a>
-          <a href="#">OLX Blog</a>
+          <a href="#">zill Blog</a>
         </div>
         <div className="footer-col">
-          <h4>OLX</h4>
+          <h4>zill</h4>
           <a href="#">Help</a>
           <a href="#">Sitemap</a>
           <a href="#">Terms of Use</a>
@@ -36,7 +36,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>Free Classifieds in Pakistan. © 2024 OLX </p>
+        <p>Free Classifieds in Pakistan. © 2024 zill </p>
       </div>
     </footer>
   );

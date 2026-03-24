@@ -34,7 +34,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h2>Welcome to OLX</h2>
+        <h2>Welcome to zill</h2>
 
         <button className="google-btn" onClick={handleGoogle}>
           <FcGoogle size={24} />
@@ -75,7 +75,7 @@ export default function Login() {
           Don't have an account?{" "}
           <Link
             to="/register"
-            style={{ color: "var(--olx-teal)", fontWeight: 700 }}
+            style={{ color: "var(--zill-teal)", fontWeight: 700 }}
           >
             Register
           </Link>

@@ -13,7 +13,7 @@ export default function GoogleCallback() {
     const token = params.get("token");
     if (token) {
       // Store token temporarily and fetch user
-      localStorage.setItem("olx_user", JSON.stringify({ token }));
+      localStorage.setItem("zill_user", JSON.stringify({ token }));
       API.get("/auth/me")
         .then((res) => {
           login({ ...res.data, token });

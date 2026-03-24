@@ -45,7 +45,7 @@ app.use("/api/chats", require("./routes/chatRoutes"));
 app.use("/api/payments", require("./routes/paymentRoutes"));
 
 // Health check
-app.get("/", (req, res) => res.json({ message: "OLX Clone API running" }));
+app.get("/", (req, res) => res.json({ message: "zill Clone API running" }));
 
 // Socket.io handlers
 io.on("connection", (socket) => {
