@@ -24,7 +24,12 @@ import GoogleCallback from "./pages/GoogleCallback";
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Navbar />
         <main className="main-content">
           <Routes>
